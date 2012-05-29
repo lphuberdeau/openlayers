@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>OpenLayers Basic Single WMS Example</title>
+    <link rel="stylesheet" href="../theme/default/style.css" type="text/css">
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script src="../lib/OpenLayers.js"></script>
+    <script type="text/javascript">
+        function init(id, withBug){
+			var map, vlayer, styleMap, toolbar;
+
+			if (withBug) {
+				styleMap = new OpenLayers.StyleMap({
+					"default": new OpenLayers.Style({
+						fillColor: '#ff0000'
+					})
+				});
+			}
+
+            map = new OpenLayers.Map(id);
+            map.addLayer(new OpenLayers.Layer.WMS( "OpenLayers WMS",
+                    "http://vmap0.tiles.osgeo.org/wms/vmap0",
+                    {layers: 'basic'} ));
+            map.zoomToMaxExtent();
+			vlayer = new OpenLayers.Layer.Vector('Vectors', {
+				styleMap: styleMap
+			});
+
+			map.addLayer(vlayer);
+			map.addControl(toolbar = new OpenLayers.Control.EditingToolbar(vlayer));
+			toolbar.addControls([new OpenLayers.Control.ModifyFeature(vlayer)]);
+        }
+    </script>
+  </head>
+  <body onload="init('map-ok', false); init('map-bug', true);">
+    <h1 id="title">Display bug</h1>
+
+
+	<p>Display a normal map with editing toolbar. Draw a feature and then select it to modify it.</p>
+    <div id="map-ok" class="smallmap"></div>
+
+	<p>Same controls, but this time, the layer has a custom StyleMap, notice that it is no longer possible to edit the features after creation.</p>
+    <div id="map-bug" class="smallmap"></div>
+  </body>
+</html>
